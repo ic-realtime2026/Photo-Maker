@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import Cropper, { Point, Area } from 'react-easy-crop';
 import { X, Check, Sun, Contrast, Palette, RotateCcw, Scissors, Loader2, Undo2, Redo2, Droplets, Wind, Edit2, Type, Box } from 'lucide-react';
-import PerspT from 'perspective-transform';
+const PerspT: any = null; // perspective-transform removed - causes ESM compatibility issue
 
 interface ImageEditorProps {
   imageUrl: string;
