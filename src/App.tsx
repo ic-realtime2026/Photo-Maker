@@ -159,7 +159,7 @@ export default function App() {
 
   const getService = () => {
     // Always create a new instance to get the latest key if it changed
-    return new FoodPhotographerService(process.env.GEMINI_API_KEY || '');
+    return new FoodPhotographerService(process.env.GEMINI_API_KEY || 'AIzaSyBDKXvInySpYP2Wvm9tRAk4zJaUJSRybvU');
   };
 
   const handleSaveCustomTemplate = () => {
