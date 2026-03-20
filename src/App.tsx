@@ -7,7 +7,7 @@ import {
   Camera, 
   Upload, 
   Settings2, 
-  Image as ImageIcon, 
+  Image as ImageIcon,
   Loader2, 
   CheckCircle2, 
   AlertCircle,
@@ -159,7 +159,7 @@ export default function App() {
 
   const getService = () => {
     // Always create a new instance to get the latest key if it changed
-    return new FoodPhotographerService(process.env.GEMINI_API_KEY || 'AIzaSyBDKXvInySpYP2Wvm9tRAk4zJaUJSRybvU');
+    return new FoodPhotographerService(process.env.GEMINI_API_KEY || '');
   };
 
   const handleSaveCustomTemplate = () => {
