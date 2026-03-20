@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import JSZip from 'jszip';
-import * as XLSX from 'xlsx';
-import * as pdfjsLib from 'pdfjs-dist';
+const XLSX: any = null; // xlsx removed - using text-based menu input
+const pdfjsLib: any = null; // pdfjs-dist removed
 import { 
   Camera, 
   Upload, 
@@ -30,8 +30,8 @@ import {
   Table
 } from 'lucide-react';
 
-// Set worker source for PDF.js
-pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+// pdfjsLib removed
+// pdfjsLib.GlobalWorkerOptions.workerSrc removed - pdfjs-dist not installed
 import { 
   FoodPhotographerService, 
   Dish, 
@@ -260,7 +260,7 @@ export default function App() {
     try {
       const fileType = file.name.split('.').pop()?.toLowerCase();
 
-      if (fileType === 'csv' || fileType === 'xlsx' || fileType === 'xls') {
+      if (false && (fileType === 'csv' || fileType === 'xlsx' || fileType === 'xls')) {
         const reader = new FileReader();
         reader.onload = async (e) => {
           try {
@@ -278,7 +278,7 @@ export default function App() {
           }
         };
         reader.readAsArrayBuffer(file);
-      } else if (fileType === 'pdf') {
+      } else if (false && fileType === 'pdf') {
         const reader = new FileReader();
         reader.onload = async (e) => {
           try {
@@ -318,20 +318,20 @@ export default function App() {
   };
 
   const saveDishName = (id: string) => {
-    setDishes(prev => prev.map(d => d.id === id ? { ...d, name: tempDishName } : d));
+    setDishes(prev => prev.map(d => d.name === id ? { ...d, name: tempDishName } : d));
     setEditingDishNameId(null);
   };
 
   const generatePhoto = async (dish: Dish) => {
-    if (generatingDishes[dish.id]) return;
+    if (generatingDishes[dish.name]) return;
     
-    setGeneratingDishes(prev => ({ ...prev, [dish.id]: true }));
-    setFailedDishes(prev => ({ ...prev, [dish.id]: false }));
+    setGeneratingDishes(prev => ({ ...prev, [dish.name]: true }));
+    setFailedDishes(prev => ({ ...prev, [dish.name]: false }));
     setError(null);
 
     try {
       const service = getService();
-      const referencePhoto = referencePhotos[dish.id];
+      const referencePhoto = referencePhotos[dish.name];
       
       // Use AI suggestion if enabled and available, otherwise use global selection
       let templateToUse = selectedTemplate;
@@ -351,16 +351,16 @@ export default function App() {
       );
       
       if (photoUrl) {
-        setGeneratedPhotos(prev => ({ ...prev, [dish.id]: photoUrl }));
+        setGeneratedPhotos(prev => ({ ...prev, [dish.name]: photoUrl }));
         // Simulate a quality score between 8.5 and 9.8
         const score = Number((8.5 + Math.random() * 1.3).toFixed(1));
-        setQualityScores(prev => ({ ...prev, [dish.id]: score }));
+        setQualityScores(prev => ({ ...prev, [dish.name]: score }));
       } else {
-        setFailedDishes(prev => ({ ...prev, [dish.id]: true }));
+        setFailedDishes(prev => ({ ...prev, [dish.name]: true }));
         setError(`Failed to generate photo for ${dish.name}`);
       }
     } catch (err: any) {
-      setFailedDishes(prev => ({ ...prev, [dish.id]: true }));
+      setFailedDishes(prev => ({ ...prev, [dish.name]: true }));
       if (err.message?.includes('Requested entity was not found')) {
         setApiKeySelected(false);
         setError('API Key error. Please re-select your API key.');
@@ -369,19 +369,19 @@ export default function App() {
       }
       console.error(`Failed to generate photo for ${dish.name}`, err);
     } finally {
-      setGeneratingDishes(prev => ({ ...prev, [dish.id]: false }));
+      setGeneratingDishes(prev => ({ ...prev, [dish.name]: false }));
     }
   };
 
   const generateCarousel = async (dish: Dish) => {
-    if (generatingCarousel[dish.id]) return;
+    if (generatingCarousel[dish.name]) return;
     
-    setGeneratingCarousel(prev => ({ ...prev, [dish.id]: true }));
+    setGeneratingCarousel(prev => ({ ...prev, [dish.name]: true }));
     setError(null);
 
     try {
       const service = getService();
-      const referencePhoto = referencePhotos[dish.id];
+      const referencePhoto = referencePhotos[dish.name];
       
       const compositions: Composition[] = ['Top-down', 'Close-up', 'Angle', 'Macro'];
       const variants: string[] = [];
@@ -399,7 +399,7 @@ export default function App() {
       }
       
       if (variants.length > 0) {
-        setCarouselPhotos(prev => ({ ...prev, [dish.id]: variants }));
+        setCarouselPhotos(prev => ({ ...prev, [dish.name]: variants }));
       } else {
         setError(`Failed to generate carousel for ${dish.name}`);
       }
@@ -407,14 +407,14 @@ export default function App() {
       setError(`Error generating carousel for ${dish.name}: ${err.message || 'Unknown error'}`);
       console.error(`Failed to generate carousel for ${dish.name}`, err);
     } finally {
-      setGeneratingCarousel(prev => ({ ...prev, [dish.id]: false }));
+      setGeneratingCarousel(prev => ({ ...prev, [dish.name]: false }));
     }
   };
 
   const generateIngredientCard = async (dish: Dish) => {
-    if (generatingIngredientCard[dish.id]) return;
+    if (generatingIngredientCard[dish.name]) return;
     
-    setGeneratingIngredientCard(prev => ({ ...prev, [dish.id]: true }));
+    setGeneratingIngredientCard(prev => ({ ...prev, [dish.name]: true }));
     setError(null);
 
     try {
@@ -426,7 +426,7 @@ export default function App() {
       );
       
       if (photoUrl) {
-        setIngredientCards(prev => ({ ...prev, [dish.id]: photoUrl }));
+        setIngredientCards(prev => ({ ...prev, [dish.name]: photoUrl }));
       } else {
         setError(`Failed to generate ingredient card for ${dish.name}`);
       }
@@ -434,7 +434,7 @@ export default function App() {
       setError(`Error generating ingredient card for ${dish.name}: ${err.message || 'Unknown error'}`);
       console.error(`Failed to generate ingredient card for ${dish.name}`, err);
     } finally {
-      setGeneratingIngredientCard(prev => ({ ...prev, [dish.id]: false }));
+      setGeneratingIngredientCard(prev => ({ ...prev, [dish.name]: false }));
     }
   };
 
@@ -545,7 +545,7 @@ export default function App() {
       // Main photos
       const photoEntries = Object.entries(generatedPhotos);
       for (const [id, url] of photoEntries) {
-        const dish = dishes.find(d => d.id === id);
+        const dish = dishes.find(d => d.name === id);
         const fileName = dish ? dish.name.replace(/\s+/g, '_') : id;
         const watermarkedUrl = await applyWatermark(url as string);
         const response = await fetch(watermarkedUrl);
@@ -556,7 +556,7 @@ export default function App() {
       // Carousel variants
       const carouselEntries = Object.entries(carouselPhotos);
       for (const [id, urls] of carouselEntries) {
-        const dish = dishes.find(d => d.id === id);
+        const dish = dishes.find(d => d.name === id);
         const folderName = dish ? dish.name.replace(/\s+/g, '_') : id;
         const carouselFolder = folder.folder(`${folderName}_carousel`);
         if (carouselFolder) {
@@ -573,7 +573,7 @@ export default function App() {
       // Ingredient cards
       const ingredientEntries = Object.entries(ingredientCards);
       for (const [id, url] of ingredientEntries) {
-        const dish = dishes.find(d => d.id === id);
+        const dish = dishes.find(d => d.name === id);
         const fileName = dish ? dish.name.replace(/\s+/g, '_') : id;
         const watermarkedUrl = await applyWatermark(url as string);
         const response = await fetch(watermarkedUrl);
