@@ -835,7 +835,7 @@ RENUMITUL CHEESY STEAK SANDWICH 350 GR: fâșii de carne de vită, panini grill,
               />
               
               <button
-                onClick={handleParseMenu}
+                onClick={() => handleParseMenu()}
                 disabled={isParsing || !menuText.trim()}
                 className="w-full py-4 bg-white text-black font-bold rounded-xl hover:bg-zinc-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
               >
